@@ -38,7 +38,6 @@ Without passing anything specific to the container it will default to starting t
 docker run -it --rm \
 -v $PWD/packer_cache:/packer/packer_cache \
 -v $PWD/images:/var/tmp/images \
--e PACKER_LOG=1 \
 --net=host \
 --device=/dev/kvm \
 croc:latest
@@ -88,7 +87,7 @@ docker run -it -v $PWD/cache:/packer/packer_cache \
 -e ISO_URL=https://software-download.microsoft.com/download/pr/Windows_Server_2016_Datacenter_EVAL_en-us_14393_refresh.ISO \
 -v $PWD/images:/var/tmp/images \
 --net=host --device=/dev/kvm \
-dacker:latest packer build -only="qemu" windows.json
+croc:latest packer build -only="qemu" windows.json
 ```
 
 ## Troubleshooting
