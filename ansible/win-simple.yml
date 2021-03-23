@@ -1,0 +1,89 @@
+---
+- hosts: all
+
+  vars:
+    bleachbit_url: https://download.bleachbit.org/BleachBit-4.2.0-portable.zip
+
+  tasks:
+    - name: Enable Remote Desktop
+      win_regedit:
+        key: 'HKLM:\System\CurrentControlSet\Control\Terminal Server'
+        value: fDenyTSConnections
+        data: 0
+        datatype: dword
+
+    - name: Allow connections from computers running any version of Remote Desktop (less secure)
+      win_regedit:
+        key: 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp'
+        value: UserAuthentication
+        data: 0
+        datatype: dword
+
+    - name: Enable Firewall Inbound Rules Group
+      win_shell: Enable-NetFirewallRule -DisplayGroup "{{ item }}"
+      loop:
+        - Remote Desktop
+        - Windows Remote Management
+
+    - name: Use the plaintext WinRM transport and force it to use basic authentication
+      win_shell: winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+
+    - name: Enable Administrator account
+      win_user:
+        name: Administrator
+        account_disabled: no
+      when: ansible_distribution is search("Microsoft Windows 10")
+
+    - name: Remove all current pagefiles
+      win_pagefile:
+        remove_all: yes
+        automatic: no
+        state: absent
+
+    - name: Disable Hibernate Mode
+      win_command: powercfg -h off
+      changed_when: false
+      when: ansible_distribution is search("Microsoft Windows 10")
+
+    - name: Download BleachBit
+      win_get_url:
+        url: "{{ bleachbit_url }}"
+        dest: "%HOMEDRIVE%\\BleachBit-portable.zip"
+      register: result
+      until: result is succeeded
+
+    - name: Unzip downloaded BleachBit
+      win_unzip:
+        src: "%HOMEDRIVE%\\BleachBit-portable.zip"
+        dest: "%HOMEDRIVE%\\"
+        delete_archive: yes
+
+    - name: Get latest UltraDefrag url
+      win_uri:
+        url: https://sourceforge.net/projects/ultradefrag/rss?path=/stable-release
+        return_content: yes
+      register: ultradefrag_url_output
+      until: ultradefrag_url_output is succeeded
+
+    - name: Set UltraDefrag url
+      set_fact:
+        # ultradefrag_url: "{{ ultradefrag_url_output.content | regex_search('<link>(.*ultradefrag-portable.*amd64.zip.*)</link>','\\1') | first }}"
+        ultradefrag_url: "https://altushost-swe.dl.sourceforge.net/project/ultradefrag/stable-release/7.1.4/ultradefrag-portable-7.1.4.bin.amd64.zip"
+
+    - name: Download UltraDefrag from {{ ultradefrag_url }}
+      win_get_url:
+        url: "{{ ultradefrag_url }}"
+        dest: "%HOMEDRIVE%\\ultradefrag-portable.bin.amd64.zip"
+        follow_redirects: all
+      register: result
+      until: result is succeeded
+
+    - name: Unzip downloaded Ultra Defrag
+      win_unzip:
+        src: "%HOMEDRIVE%\\ultradefrag-portable.bin.amd64.zip"
+        dest: "%HOMEDRIVE%\\"
+        delete_archive: yes
+
+    - name: Windows reboot
+      win_reboot:
+        reboot_timeout: 10000
