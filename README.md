@@ -81,7 +81,7 @@ In the automated approach we can pass all of the required information to the cro
 to completely build our Operating System image with no user involvement.
 
 ```
-docker run -it -v $PWD/cache:/packer/packer_cache \
+docker run -it -v $PWD/packer_cache:/packer/packer_cache \
 -e NAME=tink \
 -e WINDOWS_VERSION=2016 \
 -e ISO_URL=https://software-download.microsoft.com/download/pr/Windows_Server_2016_Datacenter_EVAL_en-us_14393_refresh.ISO \
