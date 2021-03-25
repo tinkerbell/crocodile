@@ -16,6 +16,8 @@ ESXI67ISO="http://200.131.248.12/ISO/VMware-VMvisor-Installer-6.7.0.update03-143
 ESXI70ISO="http://arv.asuhu.com/ESXi/VMware-VMvisor-Installer-7.0b-16324942.x86_64.iso"
 ESXI65ISO="http://visionnet.com.hk/vmware/VMware-VMvisor-Installer-6.5.0.update02-8294253.x86_64.iso"
 
+NIXOS2009ISO="https://channels.nixos.org/nixos-20.09/latest-nixos-minimal-x86_64-linux.iso"
+
 CONFIG=./configs/windows.json
 tput setaf 2
 if [[ $1 == "fast" ]] ; then
@@ -107,6 +109,13 @@ do
       export NAME=tink-$OS
       export VERSION=$OS
       export DISK_SIZE=4096
+      packer build -only="qemu" $CONFIG
+      ;;
+    nixos-20-09)
+      export CONFIG=./configs/nixos-20-09.json
+      export ISO_URL=$NIXOS2009ISO
+      export NAME=tink-$WINDOWS_VERSION
+      export WINDOWS_VERSION=$WINDOWS_VERSION
       packer build -only="qemu" $CONFIG
       ;;
     quit)

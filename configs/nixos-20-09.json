@@ -1,0 +1,55 @@
+{
+  "builders": [
+    {
+      "boot_wait": "45s",
+      "boot_command": [
+        "echo http://{{ .HTTPIP }}:{{ .HTTPPort}} > .packer_http<enter>",
+        "mkdir -m 0700 .ssh<enter>",
+        "curl $(cat .packer_http)/install_rsa.pub > .ssh/authorized_keys<enter>",
+        "sudo systemctl start sshd<enter>"
+      ],
+      "http_directory": "./http/nixos-20-09",
+      "shutdown_command": "sudo shutdown -h now",
+      "ssh_private_key_file": "./http/nixos-20-09/install_rsa",
+      "ssh_port": 22,
+      "ssh_username": "nixos",
+      "headless": "{{ user `headless` }}",
+      "type": "qemu",
+      "output_directory": "{{ user `name` }}-qemu",
+      "iso_url": "https://channels.nixos.org/nixos-20.09/latest-nixos-minimal-x86_64-linux.iso",
+      "iso_checksum": "b8281cbe7e46cdb52ae3f7245bf121eede4bfa6e1563e3a9070ae8ccc474705c",
+      "disk_interface": "virtio-scsi",
+      "disk_size": "{{ user `disk_size` }}",
+      "format": "raw",
+      "qemuargs": [
+        [
+          "-m",
+          "{{ user `memory` }}"
+        ]
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "execute_command": "sudo su -c '{{ .Vars }} {{.Path}}'",
+      "type": "shell",
+      "script": "./http/nixos-20-09/install.sh"
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "compression_level": 9,
+        "output": "{{ user `packer_images_output_dir` }}/{{ user `name` }}.raw.gz",
+        "type": "compress"
+      }
+    ]
+  ],
+  "variables": {
+    "disk_size": "10240",
+    "memory": "4096",
+    "headless": "true",
+    "name": "{{ env `NAME` }}",
+    "packer_images_output_dir": "{{ env `PACKER_IMAGES_OUTPUT_DIR` }}"
+  }
+}
