@@ -48,6 +48,7 @@ PS3="Enter a number: "
 set -o posix
 
 select WINDOWS_VERSION in quit $(ls http)
+
 do
   case $WINDOWS_VERSION in
     windows-2012)
