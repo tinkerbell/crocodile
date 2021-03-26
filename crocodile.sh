@@ -75,6 +75,8 @@ do
       packer build -only="qemu" $CONFIG
       ;;
     esxi6.5)
+      chmod u+s /usr/lib/qemu/qemu-bridge-helper
+      mkdir -p /etc/qemu && echo "allow virbr0" >>/etc/qemu/bridge.conf	
       export CONFIG=./configs/esxi6.5.json
       export ISO_URL=$ESXI65ISO
       export NAME=tink-$WINDOWS_VERSION
