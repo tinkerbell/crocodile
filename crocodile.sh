@@ -9,11 +9,8 @@ WIN2019ISO="https://software-download.microsoft.com/download/pr/17763.737.190906
 
 WIN20ISO="https://software-download.microsoft.com/download/pr/19041.264.200511-0456.vb_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso"
 
-NIXOS2009ISO="https://channels.nixos.org/nixos-20.09/latest-nixos-minimal-x86_64-linux.iso"
-
 ESXI65ISO="http://visionnet.com.hk/vmware/VMware-VMvisor-Installer-6.5.0.update02-8294253.x86_64.iso"
 
-SXI65ISO="VMware-VMvisor-Installer-6.5.0.update02-8294253.x86_64.iso"
 CONFIG=./configs/windows.json
 tput setaf 2
 if [[ $1 == "fast" ]] ; then
@@ -46,11 +43,11 @@ cat << "CROC"
                  `''---''``       `."
 CROC
 tput sgr0
-echo "Press  ctrl+c  when you've finished building Operating Systems"
+echo "Select quit (1)  when you've finished building Operating Systems"
 PS3="Enter a number: "
 set -o posix
 
-select WINDOWS_VERSION in $(ls http) quit
+select WINDOWS_VERSION in quit $(ls http)
 do
   case $WINDOWS_VERSION in
     windows-2012)
@@ -77,16 +74,7 @@ do
       export WINDOWS_VERSION=$WINDOWS_VERSION
       packer build -only="qemu" $CONFIG
       ;;
-    nixos-20-09)
-      export CONFIG=./configs/nixos-20-09.json
-      export ISO_URL=$NIXOS2009ISO
-      export NAME=tink-$WINDOWS_VERSION
-      export WINDOWS_VERSION=$WINDOWS_VERSION
-      packer build -only="qemu" $CONFIG
-      ;;
     esxi6.5)
-      chmod u+s /usr/lib/qemu/qemu-bridge-helper
-      mkdir -p /etc/qemu && echo "allow virbr0" >>/etc/qemu/bridge.conf
       export CONFIG=./configs/esxi6.5.json
       export ISO_URL=$ESXI65ISO
       export NAME=tink-$WINDOWS_VERSION
