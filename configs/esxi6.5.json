@@ -1,0 +1,60 @@
+{
+  "builders": [
+    {
+      "accelerator": "{{ user `accelerator` }}",
+      "boot_command": [
+        "<enter><wait>O<wait> ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>"
+      ],
+      "boot_wait": "5s",
+      "cpus": "{{ user `cpus` }}",
+      "disk_interface": "ide",
+      "disk_size": "{{ user `disk_size` }}",
+      "disk_discard": "unmap",
+      "format": "raw",
+      "headless": "{{ user `headless` }}",
+      "http_directory": "http/esxi6.5",
+      "iso_checksum": "sha1:dd4e948ed31a45e15abab2795a7e1d8618a1491d",
+      "iso_urls": [
+        "{{ user `iso_url` }}"
+      ],
+      "memory": "{{ user `memory` }}",
+      "net_bridge": "virbr0",
+      "net_device": "vmxnet3",
+      "output_directory": "{{ user `name` }}-qemu",
+      "qemuargs": [
+         [ "-cpu", "host" ]
+       ],
+      "shutdown_command": "poweroff; while true; do sleep 10; done;",
+      "ssh_timeout": "60m",
+      "ssh_username": "root",
+      "ssh_password": "Tinkerbell",
+      "type": "qemu",
+      "vm_name": "{{ user `name` }}",
+      "vnc_bind_address": "0.0.0.0"
+    }
+  ],
+  "post-processors": [
+    {
+      "compression_level": 9,
+      "output": "{{ user `packer_images_output_dir` }}/{{ user `name` }}.raw.gz",
+      "type": "compress"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "scripts/esxi/sysprep.sh"
+    }
+  ],
+  "variables": {
+    "cpus": "2",
+    "disk_size": "2048",
+    "headless": "true",
+    "memory": "4096",
+    "iso_url": "{{ env `ISO_URL` }}",
+    "name": "{{ env `NAME` }}",
+    "packer_images_output_dir": "{{ env `PACKER_IMAGES_OUTPUT_DIR` }}",
+    "vnc_bind_address": "0.0.0.0"
+  }
+}
+
