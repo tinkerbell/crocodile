@@ -16,6 +16,9 @@ ESXI67ISO="http://200.131.248.12/ISO/VMware-VMvisor-Installer-6.7.0.update03-143
 ESXI70ISO="http://arv.asuhu.com/ESXi/VMware-VMvisor-Installer-7.0b-16324942.x86_64.iso"
 ESXI65ISO="http://visionnet.com.hk/vmware/VMware-VMvisor-Installer-6.5.0.update02-8294253.x86_64.iso"
 
+# UBUNTU URLS
+FOCALISO="http://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64.img"
+
 CONFIG=./configs/windows.json
 tput setaf 2
 if [[ $1 == "fast" ]] ; then
@@ -104,6 +107,14 @@ do
       mkdir -p /etc/qemu && echo "allow virbr0" >>/etc/qemu/bridge.conf
       export CONFIG=./configs/esxi.json
       export ISO_URL=$ESXI70ISO
+      export NAME=tink-$OS
+      export VERSION=$OS
+      export DISK_SIZE=4096
+      packer build -only="qemu" $CONFIG
+      ;;
+    ubuntu-2004)
+      export CONFIG=./configs/focal.json
+      export ISO_URL=$FOCALISO
       export NAME=tink-$OS
       export VERSION=$OS
       export DISK_SIZE=4096
