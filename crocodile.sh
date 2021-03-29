@@ -18,6 +18,9 @@ ESXI65ISO="http://visionnet.com.hk/vmware/VMware-VMvisor-Installer-6.5.0.update0
 
 ALMAISO="https://repo.almalinux.org/almalinux/8.3-rc/isos/x86_64/AlmaLinux-8.3-rc-1-x86_64-boot.iso"
 
+# UBUNTU URLS
+FOCALISO="http://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64.img"
+
 CONFIG=./configs/windows.json
 tput setaf 2
 if [[ $1 == "fast" ]] ; then
@@ -114,6 +117,14 @@ do
     alma)
       export CONFIG=./configs/alma.json
       export ISO_URL=$ALMAISO
+      export NAME=tink-$OS
+      export VERSION=$OS
+      export DISK_SIZE=4096
+      packer build -only="qemu" $CONFIG
+      ;;
+    ubuntu-2004)
+      export CONFIG=./configs/focal.json
+      export ISO_URL=$FOCALISO
       export NAME=tink-$OS
       export VERSION=$OS
       export DISK_SIZE=4096
