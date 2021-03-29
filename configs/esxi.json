@@ -12,8 +12,8 @@
       "disk_discard": "unmap",
       "format": "raw",
       "headless": "{{ user `headless` }}",
-      "http_directory": "http/esxi6.5",
-      "iso_checksum": "sha1:dd4e948ed31a45e15abab2795a7e1d8618a1491d",
+      "http_directory": "http/{{ user `esxi_version` }}/",
+      "iso_checksum": "file:{{ user `iso_checksum` }}",
       "iso_urls": [
         "{{ user `iso_url` }}"
       ],
@@ -27,7 +27,7 @@
       "shutdown_command": "poweroff; while true; do sleep 10; done;",
       "ssh_timeout": "60m",
       "ssh_username": "root",
-      "ssh_password": "Tinkerbell",
+      "ssh_password": "T!nkerb3ll",
       "type": "qemu",
       "vm_name": "{{ user `name` }}",
       "vnc_bind_address": "0.0.0.0"
@@ -48,12 +48,14 @@
   ],
   "variables": {
     "cpus": "2",
-    "disk_size": "2048",
+    "disk_size": "{{ env `DISK_SIZE` }}",
     "headless": "true",
     "memory": "4096",
+    "iso_checksum": "esxi_iso.sha256",
     "iso_url": "{{ env `ISO_URL` }}",
     "name": "{{ env `NAME` }}",
     "packer_images_output_dir": "{{ env `PACKER_IMAGES_OUTPUT_DIR` }}",
+    "esxi_version": "{{ env `VERSION` }}",
     "vnc_bind_address": "0.0.0.0"
   }
 }
