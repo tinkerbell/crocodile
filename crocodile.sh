@@ -21,6 +21,8 @@ ALMAISO="https://repo.almalinux.org/almalinux/8.3-rc/isos/x86_64/AlmaLinux-8.3-r
 # UBUNTU URLS
 FOCALISO="http://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64.img"
 
+export VIRTIO_WIN_ISO_DIR="/var/tmp/virtio-win"
+
 CONFIG=./configs/windows.json
 tput setaf 2
 if [[ $1 == "fast" ]] ; then
