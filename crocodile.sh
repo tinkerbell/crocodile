@@ -124,6 +124,14 @@ do
       export DISK_SIZE=4096
       packer build -only="qemu" $CONFIG
       ;;
+    arch)
+      export CONFIG=./configs/arch.json
+      export ISO_URL=$ALMAISO
+      export NAME=tink-$OS
+      export VERSION=$OS
+      export DISK_SIZE=4096
+      packer build -only="qemu" $CONFIG
+      ;;
     ubuntu-2004)
       export CONFIG=./configs/focal.json
       export ISO_URL=$FOCALISO

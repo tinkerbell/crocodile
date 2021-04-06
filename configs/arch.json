@@ -1,0 +1,57 @@
+{
+    "variables": {
+        "iso_url": "https://mirrors.kernel.org/archlinux/iso/{{isotime \"2006.01\"}}.01/archlinux-{{isotime \"2006.01\"}}.01-x86_64.iso",
+        "iso_checksum_url": "https://mirrors.kernel.org/archlinux/iso/{{isotime \"2006.01\"}}.01/sha1sums.txt",
+        "name": "{{ env `NAME` }}",
+        "packer_images_output_dir": "{{ env `PACKER_IMAGES_OUTPUT_DIR` }}",
+        "ssh_timeout": "20m",
+        "country": "US",
+        "write_zeros": "true",
+        "headless": "true"
+    },
+    "builders": [
+         {
+            "type": "qemu",
+            "iso_url": "{{ user `iso_url` }}",
+            "iso_checksum": "file:{{ user `iso_checksum_url` }}",
+            "http_directory": "http/arch",
+            "boot_wait": "5s",
+            "boot_command": [
+                "<enter><wait10><wait10><wait10><wait10>",
+                "/usr/bin/curl -O http://{{ .HTTPIP }}:{{ .HTTPPort }}/ssh.sh<enter><wait5>",
+                "/usr/bin/curl -O http://{{ .HTTPIP }}:{{ .HTTPPort }}/poweroff.timer<enter><wait5>",
+                "/usr/bin/bash ./ssh.sh<enter>"
+            ],
+            "cpus": 1,
+            "memory": 768,
+            "disk_size": 20480,
+	    "format": "raw",
+            "ssh_username": "tinkerbell",
+            "ssh_password": "tinkerbell",
+            "ssh_timeout": "{{ user `ssh_timeout` }}",
+            "shutdown_command": "sudo systemctl start poweroff.timer",
+            "headless": "{{ user `headless`}}",
+            "vnc_bind_address": "0.0.0.0"
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "execute_command": "{{ .Vars }} COUNTRY={{ user `country` }} sudo -E -S bash '{{ .Path }}'",
+            "expect_disconnect": true,
+            "script": "scripts/arch/install-base.sh"
+        },
+        {
+            "type": "shell",
+            "execute_command": "{{ .Vars }} WRITE_ZEROS={{ user `write_zeros` }} sudo -E -S bash '{{ .Path }}'",
+            "script": "scripts/arch/cleanup.sh"
+        }
+    ],
+    "post-processors": [
+      {
+        "compression_level": 9,
+        "output": "{{ user `packer_images_output_dir` }}/{{ user `name` }}.raw.gz",
+        "type": "compress"
+      }
+    ]
+}
