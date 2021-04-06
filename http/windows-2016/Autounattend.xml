@@ -192,9 +192,9 @@
                             <PlainText>true</PlainText>
                         </Password>
                         <Group>administrators</Group>
-                        <DisplayName>Tinkerbell</DisplayName>
+                        <DisplayName>tinkerbell</DisplayName>
                         <Name>tinkerbell</Name>
-                        <Description>Tinkerbell User</Description>
+                        <Description>tinkerbell User</Description>
                     </LocalAccount>
                 </LocalAccounts>
             </UserAccounts>
