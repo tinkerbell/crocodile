@@ -134,8 +134,23 @@ do
       packer build -only="qemu" $CONFIG
       ;;
     ubuntu-2004)
-      export CONFIG=./configs/focal.json
+      export CONFIG=./configs/ubuntu.json
       export ISO_URL=$FOCALISO
+      export NAME=tink-$OS
+      export VERSION=$OS
+      export DISK_SIZE=4096
+      packer build -only="qemu" $CONFIG
+      ;;
+    ubuntu-2004-cloud-init)
+      export CONFIG=./configs/ubuntu-cloud-init.json
+      export ISO_URL=$FOCALISO
+      export NAME=tink-$OS
+      export VERSION=$OS
+      export DISK_SIZE=4096
+      packer build -only="qemu" $CONFIG
+      ;;
+    tinycore)
+      export CONFIG=./configs/tinycore.json
       export NAME=tink-$OS
       export VERSION=$OS
       export DISK_SIZE=4096
