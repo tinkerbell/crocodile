@@ -104,6 +104,7 @@ do
       export ISO_URL=$ESXI67ISO
       export NAME=tink-$OS
       export VERSION=$OS
+      export DISK_SIZE=2048
       packer build -only="qemu" $CONFIG
       ;;
     esxi7.0)
