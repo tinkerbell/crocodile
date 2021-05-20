@@ -23,7 +23,8 @@
       "ssh_password": "packerpassword",
       "ssh_username": "tinkerbell",
       "type": "qemu",
-      "use_default_display": true
+      "use_default_display": true,
+      "vnc_bind_address": "0.0.0.0"
     }
   ],
     "post-processors": [
@@ -79,7 +80,6 @@
     "iso_url": "{{ env `ISO_URL` }}",
     "name": "{{ env `NAME` }}",
     "ubuntu_version": "{{ env `VERSION` }}",
-    "packer_images_output_dir": "{{ env `PACKER_IMAGES_OUTPUT_DIR` }}",
-    "vnc_bind_address": "0.0.0.0"
+    "packer_images_output_dir": "{{ env `PACKER_IMAGES_OUTPUT_DIR` }}"
   }
 }

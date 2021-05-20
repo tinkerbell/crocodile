@@ -3,7 +3,7 @@ if exist C:\script.bat del C:\script.bat
 mkdir %WINDIR%\Setup\Scripts
 
 rem Disable password expiration for vagrant and Administrator users
-echo wmic useraccount where "name='vagrant'" set passwordexpires=false ^>^> %%WINDIR%%\Temp\SetupComplete.log >> %WINDIR%\Setup\Scripts\SetupComplete.cmd
+echo wmic useraccount where "name='tinkerbell'" set passwordexpires=false ^>^> %%WINDIR%%\Temp\SetupComplete.log >> %WINDIR%\Setup\Scripts\SetupComplete.cmd
 echo wmic useraccount where "name='Administrator'" set passwordexpires=false ^>^> %%WINDIR%%\Temp\SetupComplete.log >> %WINDIR%\Setup\Scripts\SetupComplete.cmd
 
 rem Disable WinRM when until Windows is not fully initialized / started
