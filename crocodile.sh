@@ -12,9 +12,9 @@ WIN2019ISO="https://software-download.microsoft.com/download/pr/17763.737.190906
 WIN20ISO="https://software-download.microsoft.com/download/pr/19041.264.200511-0456.vb_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso"
 
 ## ESXi URLS
-ESXI67ISO="http://200.131.248.12/ISO/VMware-VMvisor-Installer-6.7.0.update03-14320388.x86_64.iso"
-ESXI70ISO="http://arv.asuhu.com/ESXi/VMware-VMvisor-Installer-7.0b-16324942.x86_64.iso"
-ESXI65ISO="http://visionnet.com.hk/vmware/VMware-VMvisor-Installer-6.5.0.update02-8294253.x86_64.iso"
+ESXI67ISO="http://localhost/provide/your/own/VMware-VMvisor-Installer-6.7.0.update03-14320388.x86_64.iso"
+ESXI70ISO="http://localhost/provide/your/own/VMware-VMvisor-Installer-7.0b-16324942.x86_64.iso"
+ESXI65ISO="http://localhost/provide/your/own/VMware-VMvisor-Installer-6.5.0.update02-8294253.x86_64.iso"
 
 ALMAISO="https://repo.almalinux.org/almalinux/8.3-rc/isos/x86_64/AlmaLinux-8.3-rc-1-x86_64-boot.iso"
 
