@@ -5,7 +5,7 @@ for [tinkerbell](https://tinkerbell.org).
 
 **Note:** These images are for the _Community_ and are not part of [Equinix Metal Operating System Images](https://metal.equinix.com/developers/docs/operating-systems/).
 
-The repository contains a number of key peices:
+The repository contains a number of key pieces:
 
 ## Dockerfile
 
