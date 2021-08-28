@@ -1,12 +1,12 @@
 FROM ubuntu:hirsute-20210723
 
-# hadolint ignore=DL3006 - qemu-kvm cannot be pinned as it is a virtual package
+# Disable DL3008 as it is not possible to pin virtual packages such as qemu-kvm
+# hadolint ignore=DL3008
 RUN apt-get update \
- && apt-cache policy qemu-kvm \
  && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
    ansible=2.10.7-1 \
    git=1:2.30.2-1ubuntu1 \
-   qemu-kvm=* \
+   qemu-kvm \
    unzip=6.0-26ubuntu1 \
    xorriso=1.5.2-1 \
    curl=7.74.0-1ubuntu2.1 \
