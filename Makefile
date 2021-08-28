@@ -12,7 +12,7 @@ run: image
 image:
 	docker build -t croc .
 
-# BEGIN: lint-install ../crocodile/
+# BEGIN: lint-install .
 # http://github.com/tinkerbell/lint-install
 
 
@@ -21,7 +21,7 @@ SHELLCHECK_VERSION ?= v0.7.2
 LINT_OS := $(shell uname)
 LINT_ARCH := $(shell uname -m)
 
-# shellcheck and hadolint don't have arm64 native binaries: use Rosetta instead
+# shellcheck and hadolint lack arm64 native binaries: rely on x86-64 emulation
 ifeq ($(LINT_OS),Darwin)
 	ifeq ($(LINT_ARCH),arm64)
 		LINT_ARCH=x86_64
@@ -31,18 +31,18 @@ endif
 LINT_LOWER_OS  = $(shell echo $(LINT_OS) | tr '[:upper:]' '[:lower:]')
 
 
-lint: out/linters/shellcheck-$(SHELLCHECK_VERSION)/shellcheck out/linters/hadolint-$(HADOLINT_VERSION) 
-	out/linters/hadolint-$(HADOLINT_VERSION) -t info $(shell find . -name "*Dockerfile")
-	out/linters/shellcheck-$(SHELLCHECK_VERSION)/shellcheck $(shell find . -name "*.sh")
+lint: out/linters/shellcheck-$(SHELLCHECK_VERSION)-$(LINT_ARCH)/shellcheck out/linters/hadolint-$(HADOLINT_VERSION)-$(LINT_ARCH) 
+	out/linters/hadolint-$(HADOLINT_VERSION)-$(LINT_ARCH) -t info $(shell find . -name "*Dockerfile")
+	out/linters/shellcheck-$(SHELLCHECK_VERSION)-$(LINT_ARCH)/shellcheck $(shell find . -name "*.sh")
 
-out/linters/shellcheck-$(SHELLCHECK_VERSION)/shellcheck:
+out/linters/shellcheck-$(SHELLCHECK_VERSION)-$(LINT_ARCH)/shellcheck:
 	mkdir -p out/linters
-	curl -sfL https://github.com/koalaman/shellcheck/releases/download/v0.7.2/shellcheck-$(SHELLCHECK_VERSION).$(LINT_LOWER_OS).$(LINT_ARCH).tar.xz | tar -C out/linters -xJf -
+	curl -sSfL https://github.com/koalaman/shellcheck/releases/download/$(SHELLCHECK_VERSION)/shellcheck-$(SHELLCHECK_VERSION).$(LINT_LOWER_OS).$(LINT_ARCH).tar.xz | tar -C out/linters -xJf -
+	mv out/linters/shellcheck-$(SHELLCHECK_VERSION) out/linters/shellcheck-$(SHELLCHECK_VERSION)-$(LINT_ARCH)
 
-out/linters/hadolint-$(HADOLINT_VERSION):
+out/linters/hadolint-$(HADOLINT_VERSION)-$(LINT_ARCH):
 	mkdir -p out/linters
-	curl -sfL https://github.com/hadolint/hadolint/releases/download/v2.6.1/hadolint-$(LINT_OS)-$(LINT_ARCH) > out/linters/hadolint-$(HADOLINT_VERSION)
-	chmod u+x out/linters/hadolint-$(HADOLINT_VERSION)
+	curl -sfL https://github.com/hadolint/hadolint/releases/download/v2.6.1/hadolint-$(LINT_OS)-$(LINT_ARCH) > out/linters/hadolint-$(HADOLINT_VERSION)-$(LINT_ARCH)
+	chmod u+x out/linters/hadolint-$(HADOLINT_VERSION)-$(LINT_ARCH)
 
-
-# END: lint-install ../crocodile/
+# END: lint-install .
