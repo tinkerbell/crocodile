@@ -9,7 +9,7 @@ WIN2016ISO="https://software-download.microsoft.com/download/pr/Windows_Server_2
 
 WIN2019ISO="https://software-download.microsoft.com/download/pr/17763.737.190906-2324.rs5_release_svc_refresh_SERVER_EVAL_x64FRE_en-us_1.iso"
 
-WIN20ISO="https://software-download.microsoft.com/download/pr/19041.264.200511-0456.vb_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso"
+WIN10ISO="https://software-download.microsoft.com/download/pr/19041.264.200511-0456.vb_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso"
 
 ## ESXi URLS
 ESXI67ISO="http://200.131.248.12/ISO/VMware-VMvisor-Installer-6.7.0.update03-14320388.x86_64.iso"
