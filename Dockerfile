@@ -1,12 +1,32 @@
-FROM ubuntu:latest
-RUN apt-get update; apt-get upgrade -y; DEBIAN_FRONTEND=noninteractive apt-get install -y ansible git qemu-kvm unzip xorriso curl jq
+FROM ubuntu:hirsute-20210723
+
+# hadolint ignore=DL3006 - qemu-kvm cannot be pinned as it is a virtual package
+RUN apt-get update \
+ && apt-cache policy qemu-kvm \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
+   ansible=2.10.7-1 \
+   git=1:2.30.2-1ubuntu1 \
+   qemu-kvm=* \
+   unzip=6.0-26ubuntu1 \
+   xorriso=1.5.2-1 \
+   curl=7.74.0-1ubuntu2.1 \
+   jq=1.6-2.1ubuntu1 \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
 # Get virtio drivers (ensures a drive is usable for qemu
-RUN curl -L -o /var/tmp/virtio-win.iso https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/latest-virtio/virtio-win.iso; xorriso -report_about WARNING -osirrox on -indev /var/tmp/virtio-win.iso -extract / /var/tmp/virtio-win
+RUN curl -L -o /var/tmp/virtio-win.iso https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/latest-virtio/virtio-win.iso \
+  && xorriso -report_about WARNING -osirrox on -indev /var/tmp/virtio-win.iso -extract / /var/tmp/virtio-win \
+  && rm /var/tmp/virtio-win.iso
+
 ENV VIRTIO_WIN_ISO_DIR="/var/tmp/virtio-win"
 
 # Get LATEST release of packer 
-RUN export PACKER_LATEST_VERSION="$(curl -s https://checkpoint-api.hashicorp.com/v1/check/packer | jq -r -M '.current_version')"; curl -L -o /tmp/packer_linux_amd64.zip "https://releases.hashicorp.com/packer/${PACKER_LATEST_VERSION}/packer_${PACKER_LATEST_VERSION}_linux_amd64.zip" ; unzip /tmp/packer_linux_amd64.zip -d /usr/local/bin/ ; rm /tmp/packer_linux_amd64.zip
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN PLV="$(curl -s https://checkpoint-api.hashicorp.com/v1/check/packer | jq -r -M '.current_version')" \
+  && curl -L -o /tmp/packer_linux_amd64.zip "https://releases.hashicorp.com/packer/${PLV}/packer_${PLV}_linux_amd64.zip" \
+  && unzip /tmp/packer_linux_amd64.zip -d /usr/local/bin/ \
+  && rm /tmp/packer_linux_amd64.zip
 
 # Install the tinkerbell packer builds
 COPY . /packer/
