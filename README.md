@@ -1,8 +1,11 @@
 # Crocodile
 
-The **Crocodile** repository contains everything that a user should need in order to build compressed raw images
-of Windows{x}, VMware ESXi, and various Linux distros
-for [tinkerbell](https://tinkerbell.org). The repository contains a number of key pieces:
+The **Crocodile** repository contains everything that a user should need in order to build Windows{x} compressed raw images
+for [tinkerbell](https://tinkerbell.org). 
+
+**Note:** These images are for the _Community_ and are not part of [Equinix Metal Operating System Images](https://metal.equinix.com/developers/docs/operating-systems/).
+
+The repository contains a number of key pieces:
 
 ## Dockerfile
 
