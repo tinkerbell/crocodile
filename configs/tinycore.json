@@ -1,0 +1,89 @@
+{
+  "variables": {
+        "name": "{{ env `NAME` }}",
+        "packer_images_output_dir": "{{ env `PACKER_IMAGES_OUTPUT_DIR` }}"
+  },
+  "builders": [
+	{
+	  "type": "qemu",
+	  "headless": "true",
+	  "iso_url": "http://tinycorelinux.net/12.x/x86_64/release/CorePure64-12.0.iso",
+	  "iso_checksum": "ff7d97b755fcef1a88c582a48e3153ee800d4dfbe87a5d945338ecabd70dd217",
+	  "ssh_username": "tc",
+	  "ssh_password": "tc",
+          "disk_discard": "unmap",
+          "disk_interface": "virtio-scsi",
+          "disk_size": 1024,
+	  "boot_wait": "4s",
+	  "shutdown_command": "sudo poweroff",
+	  "boot_command" : [
+	  	"<enter><wait10>",
+	  	"ifconfig",
+	  	"<return>",	  	
+	  	"tce-load -iw openssh.tcz<return><wait10>",
+	  	"sudo passwd tc<return>",
+	  	"tc<return>",
+	  	"tc<return>",
+		"sudo cp /usr/local/etc/ssh/sshd_config.orig /usr/local/etc/ssh/sshd_config<return>",
+	  	"sudo /usr/local/etc/init.d/openssh start<return><wait>"
+	  ],
+	  "format":"raw",
+	  "vm_name":"TinyCore_template",
+          "vnc_bind_address": "0.0.0.0"
+	}],
+
+    "post-processors": [
+    {
+      "compression_level": 9,
+      "output": "{{ user `packer_images_output_dir` }}/{{ user `name` }}.raw.gz",
+      "type": "compress"
+    }
+  ],
+  "provisioners": [{
+    "type": "shell",
+    "pause_before":"1s",
+    "execute_command": "echo '' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'",
+    "inline": [
+      "cp -R /tmp/tce ~/"
+    ]},{
+    "type": "shell",
+    "pause_before":"1s",
+    "inline": [
+      "tce-load -iw parted.tcz",
+      "tce-load -iw grub2-multi.tcz"
+      ]},
+    {
+    "type": "shell",
+    "pause_before":"1s",
+    "execute_command": "echo '' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'",
+    "inline": [
+      "export PATH=$PATH:/usr/local/sbin:/usr/local/bin",
+      "parted /dev/sda mktable msdos",
+      "parted /dev/sda mkpart primary ext3 1% 99%",
+      "parted /dev/sda set 1 boot on",
+      "mkfs.ext3 /dev/sda1",
+      "parted /dev/sda print",
+      "rebuildfstab",
+      "mount /mnt/sda1",
+      "echo COPY SOFT",
+      "echo /usr/local/etc/init.d/openssh start >> /opt/bootlocal.sh",
+      "echo usr/local/etc/ssh > /opt/.filetool.lst",
+      "echo etc/passwd>> /opt/.filetool.lst",
+      "echo etc/shadow>> /opt/.filetool.lst",
+      "/bin/tar -C / -T /opt/.filetool.lst -cvzf /mnt/sda1/mydata.tgz",
+      "mv ~/tce /mnt/sda1/",
+      "cp -R /opt /mnt/sda1",
+      "echo INSTALLING GRUB",
+      "grub-install --boot-directory=/mnt/sda1/boot /dev/sda",
+      "mount /mnt/sr0/",
+      "cp /mnt/sr0/boot/vmlinuz64 /mnt/sda1/boot/",
+      "cp /mnt/sr0/boot/corepure64.gz /mnt/sda1/boot/",
+      "echo set timeout=3 > /mnt/sda1/boot/grub/grub.cfg",
+      "echo menuentry \\\"Tiny Core\\\" { >> /mnt/sda1/boot/grub/grub.cfg",
+      "echo  linux /boot/vmlinuz64 >> /mnt/sda1/boot/grub/grub.cfg",
+      "echo  initrd /boot/corepure64.gz >> /mnt/sda1/boot/grub/grub.cfg",
+      "echo } >> /mnt/sda1/boot/grub/grub.cfg"
+    ]
+   }
+ ]
+}

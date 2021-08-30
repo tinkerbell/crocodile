@@ -9,7 +9,7 @@ WIN2016ISO="https://software-download.microsoft.com/download/pr/Windows_Server_2
 
 WIN2019ISO="https://software-download.microsoft.com/download/pr/17763.737.190906-2324.rs5_release_svc_refresh_SERVER_EVAL_x64FRE_en-us_1.iso"
 
-WIN20ISO="https://software-download.microsoft.com/download/pr/19041.264.200511-0456.vb_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso"
+WIN10ISO="https://software-download.microsoft.com/download/pr/19041.264.200511-0456.vb_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso"
 
 ## ESXi URLS
 ESXI67ISO="http://200.131.248.12/ISO/VMware-VMvisor-Installer-6.7.0.update03-14320388.x86_64.iso"
@@ -104,6 +104,7 @@ do
       export ISO_URL=$ESXI67ISO
       export NAME=tink-$OS
       export VERSION=$OS
+      export DISK_SIZE=2048
       packer build -only="qemu" $CONFIG
       ;;
     esxi7.0)
@@ -133,8 +134,23 @@ do
       packer build -only="qemu" $CONFIG
       ;;
     ubuntu-2004)
-      export CONFIG=./configs/focal.json
+      export CONFIG=./configs/ubuntu.json
       export ISO_URL=$FOCALISO
+      export NAME=tink-$OS
+      export VERSION=$OS
+      export DISK_SIZE=4096
+      packer build -only="qemu" $CONFIG
+      ;;
+    ubuntu-2004-cloud-init)
+      export CONFIG=./configs/ubuntu-cloud-init.json
+      export ISO_URL=$FOCALISO
+      export NAME=tink-$OS
+      export VERSION=$OS
+      export DISK_SIZE=4096
+      packer build -only="qemu" $CONFIG
+      ;;
+    tinycore)
+      export CONFIG=./configs/tinycore.json
       export NAME=tink-$OS
       export VERSION=$OS
       export DISK_SIZE=4096

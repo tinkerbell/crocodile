@@ -76,4 +76,12 @@ if vmk0_mac != vmnic0_mac:
     subprocess.run(('sed', '-i', '-E', r's,^(/net/vmkernelnic/child\[0000\]/mac) = .+,\1 = "%s",g' % vmnic0_mac, '/etc/vmware/esx.conf'))
     subprocess.run(('esxcli', 'network', 'ip', 'interface', 'set', '-i', 'vmk0', '-e', 'true'))
 EOF
+
+DISK=$(esxcfg-scsidevs -l | grep "Console Device:" | awk {'print $3'})
+partedUtil fix $DISK
+START_SECTOR=$(($(partedUtil get $DISK | awk 'END{print $3}') +1))
+END_SECTOR=$(partedUtil getUsableSectors $DISK | awk '{ print $2 }')
+partedUtil add $DISK gpt "3 $START_SECTOR $END_SECTOR AA31E02A400F11DB9590000C2911D1B8 0"
+vmkfstools -C vmfs6 -S datastore1 $DISK:3
+
 LOCAL_SH

@@ -16,6 +16,16 @@ the Operating System images:
 - Qemu-kvm
 - virtio drivers (needed for Qemu to work with disks)
 
+## Host requirements
+
+### Minimal
+For most OS image builds, all you should really need is Docker on a reasonably modern Linux distro with KVM virtualization support.
+
+### ESXi special requirements
+To build ESXi images we depend on special bridged networking provided by libvirt-daemon.
+To confirm expected bridged networking, `ip link show virbr0` should succeed.
+You will also need to add `--device=/dev/net/tun --cap-add=NET_ADMIN" to your docker commands.
+
 ### Building our container image
 
 ```
@@ -49,49 +59,32 @@ croc:latest
 This will drop you into the crocodile shell for building your OS:
 
 ```
-                        .--.  .--.
-                       /    \/    \
-                      | .-.  .-.   \
-                      |/_  |/_  |   \
-                      || `\|| `\|    `----.
-                      |\0_/ \0_/    --,    \_
-    .--"""""-.       /              (` \     `-.
-   /          \-----'-.              \          \
-   \  () ()                         /`\          \
-   |                         .___.-'   |          \
-   \                        /` \|      /           ;
-    `-.___             ___.' .-.`.---.|             \
-       \| ``-..___,.-'`\| / /   /     |              `\
-        `      \|      ,`/ /   /   ,  /
-                `      |\ /   /    |\/
-                 ,   .'`-;   '     \/
-            ,    |\-'  .'   ,   .-'`
-          .-|\--;`` .-'     |\.'
-         ( `"'-.|\ (___,.--'`'
-          `-.    `"`          _.--'
-             `.          _.-'`-.
-               `''---''``       `."
-Select "quit"  when you've finished building Operating Systems
-1) windows-2012
-2) windows-2016
-3) windows-2019
-4) windows-10
-5) quit
-```
-
-### Automated
-
-In the automated approach we can pass all of the required information to the croc container
-to completely build our Operating System image with no user involvement.
-
-```
-docker run -it -v $PWD/packer_cache:/packer/packer_cache \
--e NAME=tink \
--e WINDOWS_VERSION=2016 \
--e ISO_URL=https://software-download.microsoft.com/download/pr/Windows_Server_2016_Datacenter_EVAL_en-us_14393_refresh.ISO \
--v $PWD/images:/var/tmp/images \
---net=host --device=/dev/kvm \
-croc:latest packer build -only="qemu" windows.json
+                          .--.  .--.
+                         /    \/    \
+                        | .-.  .-.   \
+                        |/_  |/_  |   \
+                        || `\|| `\|    `----.
+                        |\0_/ \0_/    --,    \_
+      .--"""""-.       /              (` \     `-.
+     /          \-----'-.              \          \
+     \  () ()                         /`\          \
+     |                         .___.-'   |          \
+     \                        /` \|      /           ;
+      `-.___             ___.' .-.`.---.|             \
+         \| ``-..___,.-'`\| / /   /     |              `\
+          `      \|      ,`/ /   /   ,  /
+                  `      |\ /   /    |\/
+                   ,   .'`-;   '     \/
+              ,    |\-'  .'   ,   .-'`
+            .-|\--;`` .-'     |\.'
+           ( `"'-.|\ (___,.--'`'
+            `-.    `"`          _.--'
+               `.          _.-'`-.
+                 `''---''``       `."
+Select quit (1)  when you've finished building Operating Systems
+1) quit		   4) esxi6.5	     7) ubuntu-2004   10) windows-2016
+2) alma		   5) esxi6.7	     8) windows-10    11) windows-2019
+3) arch		   6) esxi7.0	     9) windows-2012
 ```
 
 ## Troubleshooting
