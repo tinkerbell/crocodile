@@ -62,7 +62,7 @@ echo ">>>> install-base.sh: Generating the filesystem table.."
 echo ">>>> install-base.sh: Generating the system configuration script.."
 /usr/bin/install --mode=0755 /dev/null "${TARGET_DIR}${CONFIG_SCRIPT}"
 
-CONFIG_SCRIPT_SHORT=`basename "$CONFIG_SCRIPT"`
+CONFIG_SCRIPT_SHORT="$(basename "${CONFIG_SCRIPT}")"
 cat <<-EOF > "${TARGET_DIR}${CONFIG_SCRIPT}"
   echo ">>>> ${CONFIG_SCRIPT_SHORT}: Configuring hostname, timezone, and keymap.."
   echo '${FQDN}' > /etc/hostname
@@ -117,6 +117,6 @@ echo ">>>> install-base.sh: Completing installation.."
 # Turning network interfaces down to make sure SSH session was dropped on host.
 # More info at: https://www.packer.io/docs/provisioners/shell.html#handling-reboots
 echo '==> Turning down network interfaces and rebooting'
-for i in $(/usr/bin/netstat -i | /usr/bin/tail +3 | /usr/bin/awk '{print $1}'); do /usr/bin/ip link set ${i} down; done
+for i in $(/usr/bin/netstat -i | /usr/bin/tail +3 | /usr/bin/awk '{print $1}'); do /usr/bin/ip link set "${i}" down; done
 /usr/bin/systemctl reboot
 echo ">>>> install-base.sh: Installation complete!"
