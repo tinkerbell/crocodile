@@ -7,6 +7,7 @@ RUN apt-get update \
    ansible=2.10.7-1 \
    git=1:2.30.2-1ubuntu1 \
    qemu-kvm \
+   qemu-utils \
    unzip=6.0-26ubuntu1 \
    xorriso=1.5.2-1 \
    curl \
