@@ -1,7 +1,7 @@
 # Crocodile
 
 The **Crocodile** repository contains everything that a user should need in order to build Windows{x} compressed raw images
-for [tinkerbell](https://tinkerbell.org). 
+for [tinkerbell](https://tinkerbell.org).
 
 **Note:** These images are for the _Community_ and are not part of [Equinix Metal Operating System Images](https://metal.equinix.com/developers/docs/operating-systems/).
 
@@ -19,7 +19,7 @@ the Operating System images:
 ## Host requirements
 
 ### Minimal
-For most OS image builds, all you should really need is Docker on a reasonably modern Linux distro with KVM virtualization support.
+For most OS image builds, all you should really need is Docker on a reasonably modern Linux distro with KVM virtualization support. *Ubuntu docker hosts may need to reboot after ensuring that `libvirt-daemon-system` is installed prior to running crocodile. 
 
 ### ESXi special requirements
 To build ESXi images we depend on special bridged networking provided by libvirt-daemon.
@@ -45,6 +45,9 @@ We will map two directories into our running container:
 
 `-v $PWD/images:/var/tmp/images` - Maps a local `images` folder to where the images will be created.
 
+Ubuntu docker hosts may also require the following additional options:
+
+`--privileged -it --rm -v $PWD/packer_cache:/packer/packer_cache -v $PWD/images:/var/tmp/images -v /dev/net:/dev/net`
 ### Interactive
 
 Without passing anything specific to the container it will default to starting the interactive image building process.
