@@ -7,9 +7,10 @@ RUN apt-get update \
    ansible=2.10.7-1 \
    git=1:2.30.2-1ubuntu1 \
    qemu-kvm \
+   qemu-utils \
    unzip=6.0-26ubuntu1 \
    xorriso=1.5.2-1 \
-   curl=7.74.0-1ubuntu2.3 \
+   curl \
    jq=1.6-2.1ubuntu1 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*

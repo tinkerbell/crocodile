@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 set -euxo pipefail
 
 # install the packer VIB (vSphere Installation Bundle) to automatically
