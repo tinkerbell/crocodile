@@ -76,7 +76,7 @@
     "disk_size": "{{ env `DISK_SIZE` }}",
     "headless": "true",
     "memory": "4096",
-    "iso_checksum": "linux_iso.sha256",
+    "iso_checksum": "https://cloud-images.ubuntu.com/releases/focal/release/SHA1SUMS",
     "iso_url": "{{ env `ISO_URL` }}",
     "name": "{{ env `NAME` }}",
     "ubuntu_version": "{{ env `VERSION` }}",
