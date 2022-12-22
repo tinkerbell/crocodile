@@ -1,17 +1,17 @@
-FROM ubuntu:hirsute-20210723
+FROM ubuntu:jammy-20221130
 
 # Disable DL3008 as it is not possible to pin virtual packages such as qemu-kvm
 # hadolint ignore=DL3008
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
-   ansible=2.10.7-1 \
-   git=1:2.30.2-1ubuntu1 \
+   ansible=2.10.7+merged+base+2.10.8+dfsg-1 \
+   git=1:2.34.1-1ubuntu1.5 \
    qemu-kvm \
    qemu-utils \
-   unzip=6.0-26ubuntu1 \
-   xorriso=1.5.2-1 \
+   unzip=6.0-26ubuntu3.1 \
+   xorriso=1.5.4-2 \
    curl \
-   jq=1.6-2.1ubuntu1 \
+   jq=1.6-2.1ubuntu3 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
