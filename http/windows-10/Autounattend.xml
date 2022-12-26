@@ -29,8 +29,8 @@
             </DiskConfiguration>
             <UserData>
                 <AcceptEula>true</AcceptEula>
-                <FullName>Vagrant</FullName>
-                <Organization>Vagrant</Organization>
+                <FullName>tinkerbell</FullName>
+                <Organization>Equinix Metal</Organization>
 
                 <!--
                     NOTE: If you are re-configuring this for use of a retail key
@@ -103,19 +103,19 @@
         <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" language="neutral" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
             <UserAccounts>
                 <AdministratorPassword>
-                    <Value>vagrant</Value>
+                    <Value>tinkerbell</Value>
                     <PlainText>true</PlainText>
                 </AdministratorPassword>
                 <LocalAccounts>
                     <LocalAccount wcm:action="add">
                         <Password>
-                            <Value>vagrant</Value>
+                            <Value>tinkerbell</Value>
                             <PlainText>true</PlainText>
                         </Password>
-                        <Description>Vagrant User</Description>
-                        <DisplayName>vagrant</DisplayName>
                         <Group>administrators</Group>
-                        <Name>vagrant</Name>
+                        <DisplayName>tinkerbell</DisplayName>
+                        <Name>tinkerbell</Name>
+                        <Description>tinkerbell User</Description>
                     </LocalAccount>
                 </LocalAccounts>
             </UserAccounts>
@@ -130,10 +130,10 @@
             </OOBE>
             <AutoLogon>
                 <Password>
-                    <Value>vagrant</Value>
+                    <Value>tinkerbell</Value>
                     <PlainText>true</PlainText>
                 </Password>
-                <Username>vagrant</Username>
+                <Username>tinkerbell</Username>
                 <Enabled>true</Enabled>
             </AutoLogon>
             <FirstLogonCommands>
